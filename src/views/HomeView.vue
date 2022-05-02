@@ -4,7 +4,9 @@
     <div class="m-3">
       <h4>Què vols fer?</h4>
              <input type="checkbox" id="web" value=500 v-model.number="opcions" class="m-1">
-             <label for="web"> Una pàgina web (500 €)</label>    
+             <label for="web"> Una pàgina web (500 €)</label>   
+             <div v-if="opcions.id == web"><Panell /></div> 
+             
               <br>
              <input type="checkbox" id="seo" value=300 v-model.number="opcions" class="m-1">
              <label for="seo"> Una consultoria SEO (300 €)</label>  
@@ -20,11 +22,13 @@
 
 <script>
 // @ is an alias to /src
-
+import Panell from "../components/Panell.vue";
 
 export default {
   name: 'HomeView',
-  
+  components: {
+    Panell,
+},
     data() {
       return {
         opcions: []
