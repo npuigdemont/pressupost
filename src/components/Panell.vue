@@ -20,10 +20,10 @@ export default {
    },
    computed: {
        sum: function() {
-           let suma = 0;
+           let suma = this.numPg * this.numLang * 30;
 
            if(this.numPg == 1 && this.Lang == 1 ) suma=0;
-           else this.numPg * this.numLang * 30;
+           else ;
            this.$emit('sumPgLang', suma, this.numPg, this.numLang); 
            return suma;
        },
