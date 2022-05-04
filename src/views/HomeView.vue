@@ -6,7 +6,7 @@
              <input type="checkbox" id="web" value=500 v-model.number="opcions" @click="showContent" class="m-1">
              <label for="web"> Una pàgina web (500 €)</label>   
              <div v-if="checked"><Panell @sumPgLang="sumPgLang" />
-             Numero pàgines: {{numPg}} || Numero idiomes: {{numLang}} || Total web: {{suma}}</div> 
+             Numero pàgines: {{numPg}} || Numero idiomes: {{numLang}} || Total web: {{suma + 500}} </div> 
              
               <br>
              <input type="checkbox" id="seo" value=300 v-model.number="opcions" class="m-1">
@@ -18,6 +18,9 @@
       
        <div>Preu:  <strong>{{ sum }}</strong> euros</div>
     </div>
+
+    <router-link to="/" class="btn btn-success btn-block">
+      Tornar</router-link>
   </div>
 </template>
 
@@ -50,9 +53,10 @@ export default {
     },
     computed: {
         sum() {
-          
+          if (this.checked)
           
           return this.suma + this.opcions.reduce((a,b)=> (a+b),0);
+          else return this.opcions.reduce((a,b)=> (a+b),0);
         }
       }
 }
