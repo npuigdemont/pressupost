@@ -1,5 +1,5 @@
 <template>
-    <div class="mb-2">
+    <div class="panell m-2 p-1">
     <div class="row p-2 m-2" >
         <label  class="col text-center align-center m-2" for="pag"> Numero de pàgines: </label>
          <b-button class="col-md-1 bg-warning pill" @click="numPg--">-</b-button>
@@ -83,7 +83,7 @@ export default {
 </script>
 
 <style scoped>
-.mb-2 {
-    border: 2px;
+.panell {
+    border: 2px solid black;
 }
 </style>

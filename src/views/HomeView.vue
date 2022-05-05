@@ -28,6 +28,9 @@
 
 
 <b-col cols="12" md="6">
+  <b-button @click="abc(budget)" class="m-2">Ordenar per nom</b-button>
+  <b-button @click="dia(budget)" class="m-2">Ordenar per data</b-button>
+  <b-button @click="reinicia(budget)" class="m-2">Reiniciar</b-button>
 <PressupostList :pressupost="pressupost" :opcions="opcions" :client="client" :budget="budget"/>
 
 </b-col>
@@ -88,6 +91,18 @@ export default {
       this.opcions=[];
       this.checked= false;
 
+      },
+      abc(budget){
+        //ordenem els pressupostos per nom
+
+         this.budget.sort((a,b)=> a-b);
+        
+      },
+      dia(budget){
+        return this.budget.Date.sort();
+      },
+      reinicia(budget){
+        return this.budget;
       }
       
     },
