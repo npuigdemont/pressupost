@@ -1,11 +1,11 @@
 <template>
   <div class="home">
-    
-    <div class="m-3 col-md-6">
+    <b-row class="m-3">
+    <b-col cols="12" md="6">
       <h4>Què vols fer?</h4>
              <input type="checkbox" id="web" value=500 v-model.number="opcions" @click="showContent" class="m-1">
              <label for="web"> Una pàgina web (500 €)</label>   
-             <div v-if="checked"><Panell @cliked="onClickChild" />
+             <div v-if="checked"><Panell @mes="suma = $event" @pag="numPg = $event" @lang="numLang = $event" @sumPgLang="suma = $event" />
              Numero pàgines: {{numPg}} || Numero idiomes: {{numLang}} || Total web: {{suma + 500}} </div> 
              
               <br>
@@ -24,53 +24,49 @@
 <br>
        <router-link to="/" class="btn btn-success btn-block">
       Tornar</router-link>
-    </div>
-<div class="m-3 col-md-6">
+    </b-col>
 
 
-</div>
-    
+<b-col cols="12" md="6">
+<PressupostList :pressupost="pressupost" :opcions="opcions" :client="client" :budget="budget"/>
+
+</b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import Panell from "../components/Panell.vue";
+import PressupostList from "../components/PressupostList.vue";
 
 export default {
   name: 'HomeView',
   components: {
     Panell,
-    },
-    props: ['pressupost', 'client'],
+    PressupostList,
+},
+    
     data() {
       return {
         opcions: [],
         checked: false,
-        
-        mutablePressupost: this.pressupost,
-        mutableClient: this.client,
-        budget: []
+        pressupost: '',
+        client: '',
+        budget: [],
+        numPg: Number,
+        numLang: Number,
+        suma: Number,
+        sumPgLang: Number
         } 
     },
     methods: {
+      //mostra o amaga la configuració de la web
       showContent() {
         this.checked = !this.checked;
       },
-      onClickChild(){
-        this.suma= suma;
-        this.numPg = numPg;
-        this.numLang = numLang;
-      },
-     /* sumPgLang(suma){
-        this.suma= suma;
-      },
-       sumP(){
-        this.numPg= numPg;
-      },
-       sumL(){
-        this.numLang= numLang;
-      },*/
+  
+      //guarda a budget el pressupost amb les dades
       save(){
         if(this.pressupost =='' || this.client ==''){
         alert("No pots deixar camps buits")
@@ -79,22 +75,30 @@ export default {
               client: this.client,
               pag: this.numPg,
               lang: this.numLang,
+              opcions: this.opcions,
               total: this.sum,
-              data: Date.now()
+              data: new Date
       });
         const parsed = JSON.stringify(this.budge);
         localStorage.setItem('budget', parsed);
       
+      //reestablim a zero els paràmetres al guardar
+      this.client='';
+      this.pressupost='';
+      this.opcions=[];
+      this.checked= false;
+
       }
       
     },
     computed: {
+      //calcula el total del pressupost
         sum() {
           
-          if (this.checked)
+          if (this.checked){
           
           return this.suma + this.opcions.reduce((a,b)=> (a+b),0);
-          else return this.opcions.reduce((a,b)=> (a+b),0);
+          }else return this.opcions.reduce((a,b)=> (a+b),0);
         }
     },
     

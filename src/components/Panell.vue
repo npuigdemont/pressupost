@@ -37,6 +37,12 @@ export default {
            numLang: 1
        }
    },
+   mounted() {
+       /*this.$emit('mes', this.suma);
+       this.$emit('pag', this.numPg);
+       this.$emit('lang', this.numLang);*/
+   },
+   
    methods: {
        onClick() {
            this.$emit('cliked', this.numPg, this.numLang, suma)
@@ -61,6 +67,8 @@ export default {
            if(this.numPg == 1 && this.numLang == 1 ) suma = 0;
            else suma= this.numPg * this.numLang * 30;
            this.$emit('sumPgLang', suma); 
+           this.$emit('pag', this.numPg);
+            this.$emit('lang', this.numLang);
            return suma;
        },
        comprovarPg(){
