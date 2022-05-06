@@ -30,6 +30,6 @@ ul {
 li {
     list-style: none;
     text-decoration: none;
-    align-content: left;
+    
 }
 </style>

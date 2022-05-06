@@ -31,6 +31,10 @@
   <b-button @click="abc(budget)" class="m-2">Ordenar per nom</b-button>
   <b-button @click="dia(budget)" class="m-2">Ordenar per data</b-button>
   <b-button @click="reinicia(budget)" class="m-2">Reiniciar</b-button>
+  <input type="text"  v-model="search" v-on:keyup.enter="searchClient(budget, search)" placeholder="Busca..." id="search-input">
+    <b-icon icon="search" class="ms-2"></b-icon>
+    
+
 <PressupostList :pressupost="pressupost" :opcions="opcions" :client="client" :budget="budget"/>
 
 </b-col>
@@ -60,7 +64,8 @@ export default {
         numPg: Number,
         numLang: Number,
         suma: Number,
-        sumPgLang: Number
+        sumPgLang: Number,
+        search: ''
         } 
     },
     methods: {
@@ -92,17 +97,26 @@ export default {
       this.checked= false;
 
       },
+      //ordenar i buscar pressupostos
       abc(budget){
         //ordenem els pressupostos per nom
-
-         this.budget.sort((a,b)=> a-b);
+        let ordenar = this.budget;
+          return ordenar.sort((a,b)=> a-b);
         
       },
       dia(budget){
-        return this.budget.Date.sort();
+        let ordenar = this.budget;
+        return ordenar.sort((a,b)=> a.data > b.data);
       },
       reinicia(budget){
-        return this.budget;
+       let ordenar = this.budget;
+        return ordenar.sort((a,b)=> a.data > b.data);
+      },
+      searchClient(budget, search){
+        
+       let resultat = budget.filter(item => item.client == this.search || item.pressupost == this.search || item.total == this.search);
+       console.log(resultat);
+       return  resultat;
       }
       
     },
@@ -114,7 +128,8 @@ export default {
           
           return this.suma + this.opcions.reduce((a,b)=> (a+b),0);
           }else return this.opcions.reduce((a,b)=> (a+b),0);
-        }
+        },
+
     },
     
    
