@@ -1,0 +1,26 @@
+{
+  "budget": [
+    {},
+    {
+      "id": 1,
+      "pressupost": "re",
+      "client": "ertw",
+      "opcions": [
+        300
+      ],
+      "total": 300,
+      "data": "2022-05-09T15:02:04.594Z"
+    },
+    {
+      "pressupost": "reqw",
+      "client": "rtyty",
+      "opcions": [
+        300,
+        200
+      ],
+      "total": 500,
+      "data": "2022-05-09T15:04:40.403Z",
+      "id": 2
+    }
+  ]
+}

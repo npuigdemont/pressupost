@@ -31,9 +31,9 @@
   <b-button @click="abc(budget)" class="m-2">Ordenar per nom</b-button>
   <b-button @click="dia(budget)" class="m-2">Ordenar per data</b-button>
   <b-button @click="reinicia(budget)" class="m-2">Reiniciar</b-button>
-  <input type="text"  v-model="search" v-on:keyup.enter="searchClient(search)" placeholder="Busca..." id="search-input">
+  <input type="text" v-model="search" v-on:keyup.enter="searchClient(budget, search)" placeholder="Busca..." id="search-input">
     <b-icon icon="search" class="ms-2"></b-icon>
-    <div>{{muntat}}</div>
+
 
 <PressupostList :pressupost="pressupost" :opcions="opcions" :client="client" :budget="budget"/>
 
@@ -44,7 +44,7 @@
 
 <script>
 // @ is an alias to /src
-import { serialize } from "v8";
+
 import Panell from "../components/Panell.vue";
 import PressupostList from "../components/PressupostList.vue";
 
@@ -59,14 +59,14 @@ export default {
       return {
         opcions: [],
         checked: false,
-        pressupost: '',
-        client: '',
+        pressupost: "",
+        client: "",
         budget: [],
         numPg: Number,
         numLang: Number,
         suma: Number,
         sumPgLang: Number,
-        search: ''
+        search: ""
         } 
     },
     methods: {
@@ -79,7 +79,35 @@ export default {
       save(){
         if(this.pressupost =='' || this.client =='' || this.opcions == ''){
         alert("No pots deixar camps buits");
-       } else this.budget.push ({
+       }else var postData = {
+              id: Number,
+              pressupost: this.pressupost,
+              client: this.client,
+              pag: this.numPg,
+              lang: this.numLang,
+              opcions: this.opcions,
+              total: this.sum,
+              data: new Date
+       }
+       
+       fetch ('http://localhost:3000/budget', {method: 'POST',
+       headers: {
+         'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=utf-8'
+       },
+       body: JSON.stringify(postData)
+       })
+.then( function( response ){
+    if( response.status != 201 ){
+        this.fetchError = response.status;
+    }else{
+        response.json().then( function( data ){
+            this.fetchResponse = data;
+        }.bind(this));
+    }
+}.bind(this));
+       
+       /* else this.budget.push ({
               pressupost: this.pressupost,
               client: this.client,
               pag: this.numPg,
@@ -89,9 +117,9 @@ export default {
               data: new Date
       });
       //enviem a localStorage
-        const parsed = this.budget;
-        localStorage.setItem('budget', parsed);
-        console.log(localStorage);
+        const parsed = JSON.stringify(this.budget);
+        localStorage.setItem('budgets', parsed);
+        //console.log(localStorage);*/
       
       //reestablim a zero els paràmetres al guardar
       this.client='';
@@ -103,8 +131,11 @@ export default {
       //ordenar i buscar pressupostos
       abc(budget){
         //ordenem els pressupostos per nom
-        let ordenar = this.budget;
+        /*let ordenar = this.budget;
           return ordenar.sort((a,b)=> a-b);
+          let ordenar = JSON.parse(localStorage.getItem('budgets'))
+        return  ordenar.sort((a,b)=> a-b);*/
+        return this.budget.sort((a,b)=> a.client-b.client);
         
       },
       dia(budget){
@@ -115,21 +146,22 @@ export default {
        let ordenar = this.budget;
         return ordenar.sort((a,b)=> a.data > b.data);
       },
-      searchClient(search){
-       /* let busca = this.budget;
-        busca.filter(x => x.client.includes(search) || x.pressupost.includes(search) || x.total.includes(search));
+      searchClient(budget, search){
+        let busca = this.budget;
+       /* busca.filter(x => x.client.includes(search) || x.pressupost.includes(search) || x.total.includes(search));
         if (busca.length == 0) {
-          alert('No hi ha resultats per aquesta búsqueda');
+          alert('No hi ha resultats que coincideixin');
           this.search='';
         } else {
           console.log(busca);
           return this.busca;
 
         }*/
-
-       let resultat = budget.filter(item => item.client == this.search || item.pressupost == this.search || item.total == this.search);
+        return busca.find(this.search);
+       /*let resultat = this.budget.filter(item => item.client == this.search || item.pressupost == this.search || item.total == this.search);
        console.log(resultat);
-       return  resultat;
+       return  resultat;*/
+    
       }
       
     },
@@ -145,14 +177,16 @@ export default {
         //consultem a localStorage
       muntat() {
       if(localStorage.getItem('budget')){
-        this.budget=JSON.parse(localStorage.getItem('budget'))
+        this.budget=localStorage.getItem('budget');
       }
     }
     },
-    
-    
-   
-
+    mounted() {
+      fetch('http://localhost:3000/budget')
+      .then(res=> res.json())
+      .then(data => this.budget = data)
+      .catch(err => console.log(err.message))
+    }
     
 }
     
