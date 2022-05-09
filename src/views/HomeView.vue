@@ -31,9 +31,9 @@
   <b-button @click="abc(budget)" class="m-2">Ordenar per nom</b-button>
   <b-button @click="dia(budget)" class="m-2">Ordenar per data</b-button>
   <b-button @click="reinicia(budget)" class="m-2">Reiniciar</b-button>
-  <input type="text"  v-model="search" v-on:keyup.enter="searchClient(budget, search)" placeholder="Busca..." id="search-input">
+  <input type="text"  v-model="search" v-on:keyup.enter="searchClient(search)" placeholder="Busca..." id="search-input">
     <b-icon icon="search" class="ms-2"></b-icon>
-    
+    <div>{{muntat}}</div>
 
 <PressupostList :pressupost="pressupost" :opcions="opcions" :client="client" :budget="budget"/>
 
@@ -44,6 +44,7 @@
 
 <script>
 // @ is an alias to /src
+import { serialize } from "v8";
 import Panell from "../components/Panell.vue";
 import PressupostList from "../components/PressupostList.vue";
 
@@ -76,9 +77,9 @@ export default {
   
       //guarda a budget el pressupost amb les dades
       save(){
-        if(this.pressupost =='' || this.client ==''){
-        alert("No pots deixar camps buits")
-      } this.budget.push ({
+        if(this.pressupost =='' || this.client =='' || this.opcions == ''){
+        alert("No pots deixar camps buits");
+       } else this.budget.push ({
               pressupost: this.pressupost,
               client: this.client,
               pag: this.numPg,
@@ -87,8 +88,10 @@ export default {
               total: this.sum,
               data: new Date
       });
-        const parsed = JSON.stringify(this.budge);
+      //enviem a localStorage
+        const parsed = this.budget;
         localStorage.setItem('budget', parsed);
+        console.log(localStorage);
       
       //reestablim a zero els paràmetres al guardar
       this.client='';
@@ -106,14 +109,24 @@ export default {
       },
       dia(budget){
         let ordenar = this.budget;
-        return ordenar.sort((a,b)=> a.data > b.data);
+        return ordenar.sort((a,b)=> a.data < b.data);
       },
       reinicia(budget){
        let ordenar = this.budget;
         return ordenar.sort((a,b)=> a.data > b.data);
       },
-      searchClient(budget, search){
-        
+      searchClient(search){
+       /* let busca = this.budget;
+        busca.filter(x => x.client.includes(search) || x.pressupost.includes(search) || x.total.includes(search));
+        if (busca.length == 0) {
+          alert('No hi ha resultats per aquesta búsqueda');
+          this.search='';
+        } else {
+          console.log(busca);
+          return this.busca;
+
+        }*/
+
        let resultat = budget.filter(item => item.client == this.search || item.pressupost == this.search || item.total == this.search);
        console.log(resultat);
        return  resultat;
@@ -129,8 +142,14 @@ export default {
           return this.suma + this.opcions.reduce((a,b)=> (a+b),0);
           }else return this.opcions.reduce((a,b)=> (a+b),0);
         },
-
+        //consultem a localStorage
+      muntat() {
+      if(localStorage.getItem('budget')){
+        this.budget=JSON.parse(localStorage.getItem('budget'))
+      }
+    }
     },
+    
     
    
 
