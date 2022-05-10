@@ -33,7 +33,7 @@
   <b-button @click="reinicia(budget)" class="m-2">Reiniciar</b-button>
   <input type="text"  v-model="search" v-on:keyup.enter="searchClient(search)" placeholder="Busca..." id="search-input">
     <b-icon icon="search" class="ms-2"></b-icon>
-    <div>{{muntat}}</div>
+    
 
 <PressupostList :pressupost="pressupost" :opcions="opcions" :client="client" :budget="budget"/>
 
@@ -44,7 +44,6 @@
 
 <script>
 // @ is an alias to /src
-import { serialize } from "v8";
 import Panell from "../components/Panell.vue";
 import PressupostList from "../components/PressupostList.vue";
 
@@ -143,11 +142,11 @@ export default {
           }else return this.opcions.reduce((a,b)=> (a+b),0);
         },
         //consultem a localStorage
-      muntat() {
+   /*   muntat() {
       if(localStorage.getItem('budget')){
         this.budget=JSON.parse(localStorage.getItem('budget'))
       }
-    }
+    }*/
     },
     
     
